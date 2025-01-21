@@ -1,14 +1,19 @@
 // src/components/SideBar.jsx
 
 import { NavLink } from "react-router-dom";
-import image1 from "../images/Vector.png";
-import image2 from "../images/achat.png";
-import image3 from "../images/badg.png";
-import image4 from "../images/logout.png";
-import image5 from "../images/Group.png";
+import image1 from "../../images/Vector.png";
+import image2 from "../../images/achat.png";
+import image3 from "../../images/badg.png";
+import image4 from "../../images/logout.png";
+import image5 from "../../images/Group.png";
 import "./sideBar.css";
 
 export default function SideBar() {
+  function logout() { 
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = "/";
+  }
   return (
     <div className="sideBar">
       {/* Sidebar Header */}
@@ -24,14 +29,22 @@ export default function SideBar() {
       {/* Sidebar Menu */}
       <div className="sideBarMenu">
         <nav>
-          <div className="active">
-            <NavLink to="/orders">
+          <div
+            className={
+              window.location.pathname === "/dashboard/orders" ? "active" : ""
+            }
+          >
+            <NavLink to="/dashboard/orders">
               <img src={image3} alt="orders" />
               <span>Orders</span>
             </NavLink>
           </div>
-          <div>
-            <NavLink to="/products">
+          <div
+            className={
+              window.location.pathname === "/dashboard/products" ? "active" : ""
+            }
+          >
+            <NavLink to="/dashboard/products">
               <img src={image2} alt="products" />
               <span>Products</span>
             </NavLink>
@@ -41,7 +54,7 @@ export default function SideBar() {
 
       {/* Logout Section */}
       <div className="logout">
-        <NavLink to="/logout">
+        <NavLink to=""onClick={logout}>
           <img src={image4} alt="logout" />
           <span>LogOut</span>
         </NavLink>

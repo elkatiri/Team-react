@@ -2,7 +2,6 @@
 .sideBar {
     display: flex;
     height: 100vh;
-    margin: 4px;
     border-radius: 18px;
     width: 160px;
     background-color: #F9F1E7;
@@ -10,6 +9,10 @@
     display: flex;
     align-items: center;
     flex-direction: column;
+    position: fixed;
+}
+div {
+    transition: background-color 0.8s linear ease-in-out;
 }
 .sideBarMenu{
     display: flex;
@@ -54,7 +57,7 @@
     margin-right: 3px;
     width: 20px;
 }
-.active{
+div.active{
     background-color: #FFD7A5;
 }
 

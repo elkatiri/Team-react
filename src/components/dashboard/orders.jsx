@@ -20,15 +20,18 @@ const API_URL = "http://localhost:8000/api/orders";
    // Fetch all orders
    const fetchOrders = async () => {
      try {
-       const response = await axios.get(API_URL,{headers: { Authorization: `Bearer ${token}` }} );
-       const data = response.data;
-       setOrders(data);
-       calculateStatusCounts(data);
-       filterNewOrders(data);
-     } catch (error) {
-       console.error("Error fetching orders:", error);
-     }
-   };
+      if (!token) {
+        throw new Error("Token not available");
+      }
+      const response = await axios.get(API_URL,{headers: { Authorization: `Bearer ${token}` }} );
+      const data = response.data;
+      setOrders(data);
+      calculateStatusCounts(data);
+      filterNewOrders(data);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
 
    // Calculate status counts
    const calculateStatusCounts = (orders) => {
@@ -59,7 +62,11 @@ const API_URL = "http://localhost:8000/api/orders";
    const handleStatusChange = async (orderId, newStatus) => {
      try {
        // Update status in backend
-       await axios.put(`${API_URL}/${orderId}`, { delivery_status: newStatus });
+       await axios.put(
+         `${API_URL}/${orderId}`,
+         { delivery_status: newStatus },
+         { headers: { Authorization: `Bearer ${token}` } }
+       );
 
        // Re-fetch all orders from the backend
        await fetchOrders();
@@ -74,7 +81,7 @@ const API_URL = "http://localhost:8000/api/orders";
      setToken(localStorage.getItem("token"));
      fetchOrders();
 
-   }, []);
+   },[token]);
   return (
     <>
       <SideBar />

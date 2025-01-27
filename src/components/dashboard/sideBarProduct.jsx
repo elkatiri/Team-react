@@ -52,7 +52,6 @@ const ProductSidebar = ({ initialData = null, onClose, onSave }) => {
    dataToSubmit.append("description", formData.description);
    dataToSubmit.append("price", formData.price);
    dataToSubmit.append("quantity", formData.quantity);
-
    // If a new image is selected, add it to the FormData
    if (formData.image) {
      dataToSubmit.append("image", formData.image);
@@ -60,11 +59,13 @@ const ProductSidebar = ({ initialData = null, onClose, onSave }) => {
      // If no new image is selected, but an existing image is available, keep the old image.
      dataToSubmit.append("image", initialData.image);
    }
-    onSave(dataToSubmit);
-    onClose();
+   //show the data in the console
+/*    dataToSubmit.forEach((value, key) => {
+     console.log(`${key}: ${value}`);
+   }); */
+   onSave(dataToSubmit);
+   onClose();
  };
-
-
   return (
     <div className="sidebar">
       <div className="sidebar-header">
@@ -74,7 +75,7 @@ const ProductSidebar = ({ initialData = null, onClose, onSave }) => {
         </button>
       </div>
       <form className="sidebar-form" encType="multipart/form-data">
-        {formData.image && (
+        {formData.image&&(
           <img
             src={`http://localhost:8000/storage/${formData.image}`}
             alt="Uploaded"

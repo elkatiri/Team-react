@@ -7,9 +7,12 @@ import image3 from "../../images/badg.png";
 import image4 from "../../images/logout.png";
 import image5 from "../../images/Group.png";
 import "./sideBar.css";
+import axios from "axios";
 
 export default function SideBar() {
   function logout() { 
+  const token = localStorage.getItem("token");
+  axios.post("http://127.0.0.1:8000/api/logout", { headers: { Authorization: `Bearer ${token}` } });
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     window.location.href = "/";

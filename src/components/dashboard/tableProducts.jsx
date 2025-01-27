@@ -30,7 +30,7 @@ const TableProducts = ({ products, onUpdate, onDelete }) => {
                   {product.image ? (
                     <img
                       src={`http://localhost:8000/storage/${product.image}`}
-                      alt={product.name}
+                      alt={product.image}
                       className="product-image"
                     />
                   ) : (

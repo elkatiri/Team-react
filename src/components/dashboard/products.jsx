@@ -81,6 +81,9 @@ export default function Products({ user }) {
 
   // Handle saving a product (both adding and updating)
   const handleSaveProduct = async (productData) => {
+    //debuging the product data
+
+
     try {
       if (!token) {
         throw new Error("Token not available");
@@ -88,6 +91,11 @@ export default function Products({ user }) {
 
       // If currentProduct is set, we are updating a product
       if (currentProduct) {
+        //Debeguing
+          productData.forEach((value, key) => {
+            console.log(`${key}: ${value}`);
+          });
+
         const response = await axios.put(
           `http://127.0.0.1:8000/api/products/${currentProduct.id}`,
           productData,
@@ -103,11 +111,16 @@ export default function Products({ user }) {
         }
       } else {
         // Otherwise, we are adding a new product
+        //debuging:
+        productData.forEach((value, key) => {
+          console.log(`${key}: ${value}`);
+        });
         const response = await axios.post(
           "http://127.0.0.1:8000/api/products",
           productData,
           {
             headers: { Authorization: `Bearer ${token}` },
+            "Content-Type": "application/json",
           }
         );
         if (!response.data) {

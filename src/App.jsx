@@ -10,6 +10,7 @@ import About from "./components/about";
 
 
 
+
 function App() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [user, setUser] = useState("");
@@ -17,23 +18,27 @@ function App() {
     setIsAdmin(localStorage.getItem("admin"));
     setUser(localStorage.getItem("user"));
   }, []);
-return (
-  <BrowserRouter>
-    <Routes>
-      <Route
-        path="/dashboard/orders"
-        element={isAdmin && <Orders user={user} />}
-      />
-      <Route
-        path="/dashboard/products"
-        element={isAdmin && <Products user={user} />}
-      />
-      <Route path="/blog" element={<Blog />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/auth" element={<AuthForm />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
-  </BrowserRouter>
-);
+  return (
+    <>
+      
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/dashboard/orders"
+            element={isAdmin && <Orders user={user} />}
+          />
+          <Route
+            path="/dashboard/products"
+            element={isAdmin && <Products user={user} />}
+          />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/auth" element={<AuthForm />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+      
+    </>
+  );
 };
 export default App;

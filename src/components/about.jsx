@@ -3,9 +3,12 @@ import location from "../images/location.png";
 import phone from "../images/phone.png";
 import time from "../images/time.png";
 import BfrFooter from "./bfr_footer";
+import Footer from "./footer";
+import Navbar from "./navbar";
 export default function About() {
     return (
       <div className="container_about">
+        <Navbar/>
         <div className="bg_about"></div>
         <div className="special_header">
           <h1>Get In Touch With Us</h1>
@@ -51,7 +54,8 @@ export default function About() {
             </button>
           </form>
             </div>
-        <BfrFooter/>
+        <BfrFooter />
+        <Footer />
       </div>
     );
 }

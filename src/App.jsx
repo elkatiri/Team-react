@@ -5,6 +5,8 @@ import Orders from "./components/dashboard/orders";
 import Products from "./components/dashboard/products";
 import { useEffect, useState } from "react";
 import NotFound from "./components/NotFound";
+import Blog from "./components/blog";
+import About from "./components/about";
 
 
 
@@ -18,7 +20,6 @@ function App() {
 return (
   <BrowserRouter>
     <Routes>
-      <Route path="/" element={<AuthForm />} />
       <Route
         path="/dashboard/orders"
         element={isAdmin && <Orders user={user} />}
@@ -27,6 +28,9 @@ return (
         path="/dashboard/products"
         element={isAdmin && <Products user={user} />}
       />
+      <Route path="/blog" element={<Blog />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/auth" element={<AuthForm />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   </BrowserRouter>

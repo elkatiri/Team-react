@@ -57,10 +57,21 @@ export default function Shop() {
       fetchProducts(); // Charger tous les produits par défaut
     }
   }, [selectedOption]);
+  //Search function
+  function Search(searchQuery) {
+    if (searchQuery === "") {
+      fetchProducts();
+    } else {
+      const filteredProducts = products.filter((product) =>
+        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setProducts(filteredProducts);
+    }
+  }
 
   return (
     <>
-      <Navbar />
+      <Navbar Search={Search} />
       <div className="shope_bg"></div>
       <div className="filter">
         <h2>

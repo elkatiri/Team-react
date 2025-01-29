@@ -12,6 +12,7 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
+  position: relative;
   z-index: 1000;
 }
 
@@ -60,4 +61,23 @@
 
 .navbar .icons .icon:hover {
   color: rgb(218, 130, 15);
+}
+
+.search-input {
+  display: flex;
+  position: absolute;
+  bottom:1.3rem;
+  z-index:2025;
+  left:72%;
+  padding: 15px;
+  border: 1px solid rgba(201, 181, 0, 0.878);
+  border-radius: 10px;
+  font-size: 14px;
+  width: 200px;
+  transition: width 0.3s ease-in-out;
+}
+
+
+.search-input{
+  outline: none;
 }

@@ -1,9 +1,12 @@
 import { FaEye, FaCartPlus } from "react-icons/fa";
-import { Link } from "react-router-dom";  
+import { Link, useLocation } from "react-router-dom";  
 import './style/ProductsListes.css'; 
 import { BiChevronRight } from "react-icons/bi";
 
 const ProductsList = ({ products, handelShowMore }) => {
+  const location = useLocation();
+  const path = location.pathname;
+
   return (
     <>
       <div className="allProducts">
@@ -40,7 +43,7 @@ const ProductsList = ({ products, handelShowMore }) => {
           ))}
         </div>
       </div>
-      {products.length < 9 && (
+      {products.length < 9 && path !== "/shop" && (
         <div className="show-more-button-container">
           <button className="show-more-button" onClick={handelShowMore}>
             Show More
@@ -50,7 +53,7 @@ const ProductsList = ({ products, handelShowMore }) => {
             </span>
           </button>
         </div>
-      )}
+      )}  
     </>
   );
 };

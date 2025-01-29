@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import NotFound from "./components/NotFound";
 import Blog from "./components/blog";
 import About from "./components/about";
+import Home from "./components/home";
+import Shop from "./components/shope";
 
 
 
@@ -31,8 +33,10 @@ function App() {
             path="/dashboard/products"
             element={isAdmin && <Products user={user} />}
           />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/about" element={<About />} />
+          <Route path="/"element={<Home/>}/>
+          <Route path="/shop"element={<Shop/>}/>
+          <Route path="/about" element={<Blog />} />
+          <Route path="/contact" element={<About />} />
           <Route path="/auth" element={<AuthForm />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

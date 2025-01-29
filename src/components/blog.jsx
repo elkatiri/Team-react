@@ -1,4 +1,4 @@
-import "./blog.css"
+import "./style/blog.css"
 import blog1 from "../images/blog1.png";
 import blog2 from "../images/blog2.png";
 import blog3 from "../images/blog3.png";

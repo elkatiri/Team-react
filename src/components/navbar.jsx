@@ -1,7 +1,8 @@
 import React from "react";
 import { FaCartPlus, FaSearch, FaUser } from "react-icons/fa";
-import "./navbar.css";
+import "./style/navbar.css";
 import logo from "../images/logo.png";
+import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
   return (
@@ -10,14 +11,28 @@ const Navbar = () => {
         <img src={logo} alt="Logo" />
         <h1>Furniro</h1>
       </div>
-      <ul className="menu">
-        <li><a href="#home">Home</a></li>
-        <li><a href="#shop">Shop</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
+      <nav>
+        <ul className="menu">
+          <li>
+            <NavLink to="/" end>
+              Home
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/shop">Shop</NavLink>
+          </li>
+          <li>
+            <NavLink to="/about">About</NavLink>
+          </li>
+          <li>
+            <NavLink to="/contact">Contact</NavLink>
+          </li>
+        </ul>
+      </nav>
       <div className="icons">
-        <FaUser className="icon" />
+        <NavLink to="/auth">
+          <FaUser className="icon" />
+        </NavLink>
         <FaSearch className="icon" />
         <FaCartPlus className="icon" />
       </div>

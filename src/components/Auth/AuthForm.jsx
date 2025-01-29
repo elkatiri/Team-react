@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./AuthForm.css";
 import { useNavigate } from "react-router-dom";
+import Footer from "../footer";
+import Navbar from "../navbar";
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -75,85 +77,89 @@ const AuthForm = () => {
   };
 
   return (
-    <div className="auth-container">
-      <div
-        className={`auth-form ${isLogin ? "fade-in-bottom" : "fade-in-top"}`}
-      >
-        <h2 className="form-title">{isLogin ? "Sign In" : "Sign Up"}</h2>
-        <form onSubmit={handleSubmit}>
-          {!isLogin && (
+    <>
+      <Navbar />
+      <div className="auth-container">
+        <div
+          className={`auth-form ${isLogin ? "fade-in-bottom" : "fade-in-top"}`}
+        >
+          <h2 className="form-title">{isLogin ? "Sign In" : "Sign Up"}</h2>
+          <form onSubmit={handleSubmit}>
+            {!isLogin && (
+              <div className="form-group">
+                <label htmlFor="name"> Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="Enter your full name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            )}
+
             <div className="form-group">
-              <label htmlFor="name"> Name</label>
+              <label htmlFor="email">Email Address</label>
               <input
-                type="text"
-                id="name"
-                name="name"
-                placeholder="Enter your full name"
-                value={formData.name}
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email"
+                value={formData.email}
                 onChange={handleChange}
                 required
               />
+              {error && <p className="error-text">{error}</p>}
             </div>
-          )}
 
-          <div className="form-group">
-            <label htmlFor="email">Email Address</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Enter your email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-            {error && <p className="error-text">{error}</p>}
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              style={{ border: border ? "1px solid red" : "1px solid #ccc" }}
-            />
-          </div>
-
-          {!isLogin && (
             <div className="form-group">
-              <label htmlFor="password_confirmation">Confirm Password</label>
+              <label htmlFor="password">Password</label>
               <input
                 type="password"
-                id="password_confirmation"
-                name="password_confirmation"
-                placeholder="Confirm your password"
-                value={formData.password_confirmation}
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                value={formData.password}
                 onChange={handleChange}
                 required
-                style={{
-                  border: border ? "1px solid red" : "1px solid #ccc",
-                }}
+                style={{ border: border ? "1px solid red" : "1px solid #ccc" }}
               />
             </div>
-          )}
 
-          <button type="submit" className="submit-btn">
-            {isLogin ? "Sign In" : "Create Account"}
+            {!isLogin && (
+              <div className="form-group">
+                <label htmlFor="password_confirmation">Confirm Password</label>
+                <input
+                  type="password"
+                  id="password_confirmation"
+                  name="password_confirmation"
+                  placeholder="Confirm your password"
+                  value={formData.password_confirmation}
+                  onChange={handleChange}
+                  required
+                  style={{
+                    border: border ? "1px solid red" : "1px solid #ccc",
+                  }}
+                />
+              </div>
+            )}
+
+            <button type="submit" className="submit-btn">
+              {isLogin ? "Sign In" : "Create Account"}
+            </button>
+          </form>
+
+          <button className="toggle-btn" onClick={toggleForm}>
+            {isLogin
+              ? "Need an account? Sign Up"
+              : "Already have an account? Sign In"}
           </button>
-        </form>
-
-        <button className="toggle-btn" onClick={toggleForm}>
-          {isLogin
-            ? "Need an account? Sign Up"
-            : "Already have an account? Sign In"}
-        </button>
+        </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 

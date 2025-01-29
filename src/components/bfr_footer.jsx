@@ -2,7 +2,7 @@ import one from '../images/trophy 1.png';
 import two from '../images/guarantee.png';
 import three from '../images/shipping.png';
 import four from '../images/call.png';
-import "./bfr_footer.css"
+import "./style/bfr_footer.css"
 export default function BfrFooter(){
     return (
       <div className="container">

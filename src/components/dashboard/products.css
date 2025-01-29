@@ -1,6 +1,7 @@
 .productContainer{
     display:block;
-    width:100%;
+    width:83%;
+    overflow-x: hidden;
     margin-left: 200px;
     padding: 20px;
 }

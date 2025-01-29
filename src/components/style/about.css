@@ -2,7 +2,7 @@
     width:100%;
 }
 .bg_about{
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(../images/about_bg.png);
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(../../images/about_bg.png);
     background-size: cover;
     background-position: center;
     height: 50vh;
@@ -48,22 +48,25 @@
 .all span {
     color: #898989;
 }
-form{
+.all_contact form{
     display: flex;
     gap:1rem;
     flex-direction: column;
     width: 40%;
-}form label{
+}.all_contact form label{
     font-weight: 700;
 }
-form input,textarea{
+.all_contact form input,textarea{
     padding: 1rem;
     width: 90%;
     border-radius: 20px;
     outline: none;
     border: 1px solid #9F9F9F;
+}.all_contact form input:focus,
+textarea:focus{
+    border: 1px solid #B88E2F;
 }
-button[type="submit"]{
+.all_contact form button[type="submit"]{
     padding: 1rem;
     border-radius: 20px;
     background-color: #B88E2F;

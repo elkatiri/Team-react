@@ -1,3 +1,4 @@
+
 .footer .container{
   background-color: white;
 }
@@ -7,6 +8,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 48px;
+  padding:1rem 4rem;
 }
 
 .footer .brand {
@@ -55,6 +57,11 @@
   text-decoration: none;
   font-family: 'Poppins', sans-serif;
   font-weight: 500;
+  transition: transform .3s ease-in-out;
+}
+.footer .section .list .list-item:hover .link{
+  color:rgb(218, 130, 15);
+  transform: scale(1.2);
 }
 
 .footer .newsletter {

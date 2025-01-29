@@ -1,4 +1,4 @@
-import "./about.css"
+import "./style/about.css"
 import location from "../images/location.png";
 import phone from "../images/phone.png";
 import time from "../images/time.png";

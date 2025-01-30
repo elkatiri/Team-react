@@ -9,6 +9,7 @@ import Blog from "./components/blog";
 import About from "./components/about";
 import Home from "./components/home";
 import Shop from "./components/shope";
+import ProductDetails from "./components/productdetails";
 
 
 
@@ -35,6 +36,7 @@ function App() {
           />
           <Route path="/"element={<Home/>}/>
           <Route path="/shop"element={<Shop/>}/>
+          <Route path="/product-details/:id" element={<ProductDetails />} />
           <Route path="/about" element={<Blog />} />
           <Route path="/contact" element={<About />} />
           <Route path="/auth" element={<AuthForm />} />

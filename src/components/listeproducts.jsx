@@ -1,12 +1,12 @@
 import { FaEye, FaCartPlus } from "react-icons/fa";
-import { Link, useLocation } from "react-router-dom";  
+import { Link, useLocation, useNavigate } from "react-router-dom";  
 import './style/ProductsListes.css'; 
 import { BiChevronRight } from "react-icons/bi";
 
 const ProductsList = ({ products, handelShowMore }) => {
   const location = useLocation();
+  const navigate=useNavigate();
   const path = location.pathname;
-
   return (
     <>
       <div className="allProducts">
@@ -16,10 +16,10 @@ const ProductsList = ({ products, handelShowMore }) => {
             <div key={product.id} className="product-card">
               {/* Eye Icon */}
               <Link
-                to={`/product/${product.id}`}
+                to={`/product-details/${product.id}`}
                 className="product-eye-icon"
                 title="View Product Details"
-              >
+                onClick={() => navigate(`/product-details/${product.id}`)}>
                 <FaEye />
               </Link>
               {/* Product Image */}
@@ -53,7 +53,7 @@ const ProductsList = ({ products, handelShowMore }) => {
             </span>
           </button>
         </div>
-      )}  
+      )}
     </>
   );
 };

@@ -11,6 +11,7 @@ export default function Home() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
+  const [cart, setCart] = useState([]); 
 
   const fetchedProducts = async () => {
     setLoading(true);
@@ -33,7 +34,6 @@ export default function Home() {
 
   function Search(searchQuery) {
     if (searchQuery === "") {
-      // If the search query is empty, reset the products list
       fetchedProducts();
     } else {
       const filteredProducts = products.filter((product) =>
@@ -43,18 +43,31 @@ export default function Home() {
     }
   }
 
+  // Add product to cart
+  function handelAddToCart(product) {
+    setCart((prevCart) => [...prevCart, product]);
+  }
+  //remove product from cart
+  const removeFromCart = (index) => {
+      setCart((prevCart) => prevCart.filter((_, i) => i !== index));
+    }; 
+
   useEffect(() => {
     fetchedProducts();
   }, []);
 
   return (
     <>
-      <Navbar Search={Search} />
+      <Navbar Search={Search} cart={cart} removeFromCart={removeFromCart} />
       <Header />
       {loading ? (
         <Spinner />
       ) : (
-        <ProductsList products={products} handelShowMore={handelShowMore} />
+        <ProductsList
+          products={products}
+          handelShowMore={handelShowMore}
+          handelAddToCart={handelAddToCart}
+        />
       )}
       <Footer />
     </>

@@ -11,7 +11,8 @@ import Spinner from "./spinner";
 export default function Shop() {
   const [selectedOption, setSelectedOption] = useState(null);
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
+  const [cart, setCart] = useState([]);
 
   // Fonction pour récupérer tous les produits
   const fetchProducts = async () => {
@@ -68,10 +69,18 @@ export default function Shop() {
       setProducts(filteredProducts);
     }
   }
+  // Add product to cart
+  function handelAddToCart(product) {
+    setCart((prevCart) => [...prevCart, product]);
+  }
+  //remove product from cart
+  const removeFromCart = (index) => {
+    setCart((prevCart) => prevCart.filter((_, i) => i !== index));
+  };
 
   return (
     <>
-      <Navbar Search={Search} />
+      <Navbar Search={Search} cart={cart} removeFromCart={removeFromCart} />
       <div className="shope_bg"></div>
       <div className="filter">
         <h2>
@@ -90,7 +99,11 @@ export default function Shop() {
         />
       </div>
 
-      {loading ? <Spinner /> : <ProductsList products={products} />}
+      {loading ? (
+        <Spinner />
+      ) : (
+        <ProductsList products={products} handelAddToCart={handelAddToCart} />
+      )}
 
       <Footer />
     </>

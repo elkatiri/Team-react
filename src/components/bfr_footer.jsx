@@ -5,7 +5,7 @@ import four from '../images/call.png';
 import "./style/bfr_footer.css"
 export default function BfrFooter(){
     return (
-      <div className="container">
+      <div className="BfrFooter_container">
         <div className="BfrFooter_all">
           <img src={one} alt=""></img>
           <div>

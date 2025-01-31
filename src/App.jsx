@@ -10,10 +10,8 @@ import About from "./components/about";
 import Home from "./components/home";
 import Shop from "./components/shope";
 import ProductDetails from "./components/productdetails";
-
-
-
-
+import Checkout from "./components/Checkout";
+import Card from "./components/card";
 function App() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [user, setUser] = useState("");
@@ -39,6 +37,8 @@ function App() {
           <Route path="/product-details/:id" element={<ProductDetails />} />
           <Route path="/about" element={<Blog />} />
           <Route path="/contact" element={<About />} />
+          <Route path="/check-out" element={<Checkout />} />
+          <Route path="/card" element={<Card />} />
           <Route path="/auth" element={<AuthForm />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

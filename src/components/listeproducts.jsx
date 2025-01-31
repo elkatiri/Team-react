@@ -1,12 +1,13 @@
 import { FaEye, FaCartPlus } from "react-icons/fa";
-import { Link, useLocation, useNavigate } from "react-router-dom";  
-import './style/ProductsListes.css'; 
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import "./style/ProductsListes.css";
 import { BiChevronRight } from "react-icons/bi";
 
-const ProductsList = ({ products, handelShowMore }) => {
+const ProductsList = ({ products, handelShowMore, handelAddToCart }) => {
   const location = useLocation();
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const path = location.pathname;
+
   return (
     <>
       <div className="allProducts">
@@ -14,30 +15,31 @@ const ProductsList = ({ products, handelShowMore }) => {
         <div className="products-list">
           {products.map((product) => (
             <div key={product.id} className="product-card">
-              {/* Eye Icon */}
               <Link
                 to={`/product-details/${product.id}`}
                 className="product-eye-icon"
                 title="View Product Details"
-                onClick={() => navigate(`/product-details/${product.id}`)}>
+                onClick={() => navigate(`/product-details/${product.id}`)}
+              >
                 <FaEye />
               </Link>
-              {/* Product Image */}
               <div className="product-image-container">
                 <img
                   src={`http://localhost:8000/storage/${product.image}`}
                   alt={product.name}
                   className="product-image"
                 />
-                <div className="add-to-cart-btn">
+                <div
+                  className="add-to-cart-btn"
+                  onClick={() => handelAddToCart(product)}
+                >
                   <FaCartPlus /> Add to Cart
                 </div>
               </div>
-              {/* Product Info */}
               <div className="product-info">
                 <h2 className="product-name">{product.name}</h2>
                 <p className="product-description">{product.description}</p>
-                <p className="product-price">${product.price}</p>
+                <p className="product-price">{product.price} dh</p>
               </div>
             </div>
           ))}

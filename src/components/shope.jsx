@@ -6,30 +6,31 @@ import "./style/shope.css";
 import axios from "axios";
 import Creatable from "react-select/creatable";
 import { SlidersHorizontal } from "lucide-react";
-import Spinner from "./spinner"; 
+import Spinner from "./spinner";
+import { useSelector, useDispatch } from "react-redux";
+import { addToCart, removeFromCart } from "./cartSlice";
 
 export default function Shop() {
+  const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart);
   const [selectedOption, setSelectedOption] = useState(null);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [cart, setCart] = useState([]);
 
-  // Fonction pour récupérer tous les produits
   const fetchProducts = async () => {
-    setLoading(true); // Start loading
+    setLoading(true);
     try {
       const response = await axios.get("http://127.0.0.1:8000/api/products");
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
-  // Fonction pour filtrer les produits par prix ou date
   const fetchFilteredProducts = async (filterType) => {
-    setLoading(true); // Start loading
+    setLoading(true);
     try {
       const url =
         filterType === "price"
@@ -41,24 +42,22 @@ export default function Shop() {
     } catch (error) {
       console.error("Error filtering products:", error);
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
-  // Gérer le changement de filtre
   const handleChange = (newValue) => {
     setSelectedOption(newValue);
   };
 
-  // Filtrer les produits quand selectedOption change
   useEffect(() => {
     if (selectedOption?.value) {
       fetchFilteredProducts(selectedOption.value);
     } else {
-      fetchProducts(); // Charger tous les produits par défaut
+      fetchProducts();
     }
   }, [selectedOption]);
-  //Search function
+
   function Search(searchQuery) {
     if (searchQuery === "") {
       fetchProducts();
@@ -69,18 +68,22 @@ export default function Shop() {
       setProducts(filteredProducts);
     }
   }
-  // Add product to cart
+
   function handelAddToCart(product) {
-    setCart((prevCart) => [...prevCart, product]);
+    dispatch(addToCart(product));
   }
-  //remove product from cart
-  const removeFromCart = (index) => {
-    setCart((prevCart) => prevCart.filter((_, i) => i !== index));
-  };
+
+  function handelRemoveFromCart(index) {
+    dispatch(removeFromCart(index));
+  }
 
   return (
     <>
-      <Navbar Search={Search} cart={cart} removeFromCart={removeFromCart} />
+      <Navbar
+        Search={Search}
+        cart={cart}
+        removeFromCart={handelRemoveFromCart}
+      />
       <div className="shope_bg"></div>
       <div className="filter">
         <h2>

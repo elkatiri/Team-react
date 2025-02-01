@@ -1,15 +1,19 @@
 import React, { useState } from "react";
 import { FaCartPlus, FaSearch, FaUser } from "react-icons/fa";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import { ShoppingBag, Trash } from "lucide-react";
+import { useSelector, useDispatch } from "react-redux";
+import { removeFromCart } from "./cartSlice";
 import "./style/navbar.css";
 import logo from "../images/logo.png";
 
-const Navbar = ({ Search, cart, removeFromCart }) => {
-  const navigate = useNavigate();
+const Navbar = ({ Search }) => {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isCartVisible, setIsCartVisible] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart);
 
   const toggleSearch = () => setIsSearchVisible(!isSearchVisible);
   const toggleCart = () => setIsCartVisible(!isCartVisible);
@@ -18,9 +22,6 @@ const Navbar = ({ Search, cart, removeFromCart }) => {
     setSearchQuery(e.target.value);
     Search(e.target.value);
   }
-  const NavigateTOCard = () => {
-    navigate("/card")
-  }
 
   return (
     <nav className="navbar">
@@ -28,34 +29,28 @@ const Navbar = ({ Search, cart, removeFromCart }) => {
         <img src={logo} alt="Furniro Logo" />
         <h1>Furniro</h1>
       </div>
-      <nav>
-        <ul className="menu">
-          <li>
-            <NavLink to="/" end>
-              Home
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/shop">Shop</NavLink>
-          </li>
-          <li>
-            <NavLink to="/about">About</NavLink>
-          </li>
-          <li>
-            <NavLink to="/contact">Contact</NavLink>
-          </li>
-        </ul>
-      </nav>
+      <ul className="menu">
+        <li>
+          <NavLink to="/" end>
+            Home
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/shop">Shop</NavLink>
+        </li>
+        <li>
+          <NavLink to="/about">About</NavLink>
+        </li>
+        <li>
+          <NavLink to="/contact">Contact</NavLink>
+        </li>
+      </ul>
       <div className="icons">
-        <NavLink to="/auth" aria-label="User Account">
+        <NavLink to="/auth">
           <FaUser className="icon" />
         </NavLink>
         <div className="search-container">
-          <FaSearch
-            className="icon"
-            aria-label="Search"
-            onClick={toggleSearch}
-          />
+          <FaSearch className="icon" onClick={toggleSearch} />
           {isSearchVisible && (
             <input
               type="text"
@@ -68,9 +63,7 @@ const Navbar = ({ Search, cart, removeFromCart }) => {
         </div>
         <div className="cart-icon-container" onClick={toggleCart}>
           <FaCartPlus className="icon" />
-          {Array.isArray(cart) && cart.length > 0 && (
-            <span className="cart-count">{cart.length}</span>
-          )}
+          {cart.length > 0 && <span className="cart-count">{cart.length}</span>}
         </div>
       </div>
       {isCartVisible && (
@@ -80,7 +73,7 @@ const Navbar = ({ Search, cart, removeFromCart }) => {
             <ShoppingBag className="ShoppingBag" onClick={toggleCart} />
           </div>
           <div className="shopping-cart-container">
-            {Array.isArray(cart) && cart.length > 0 ? (
+            {cart.length > 0 ? (
               cart.map((item, index) => (
                 <div key={index} className="shopping-cart-element">
                   <img
@@ -88,10 +81,11 @@ const Navbar = ({ Search, cart, removeFromCart }) => {
                     alt={item.name}
                   />
                   <p>{item.name}</p>
-                  <p>{item.price} dh</p>
+                  <p>{item.quantity}</p>
+                  <p>{item.price*item.quantity} dh</p>
                   <button
                     className="remove-btn"
-                    onClick={() => removeFromCart(index)}
+                    onClick={() => dispatch(removeFromCart(item.id))}
                   >
                     <Trash color="#B88E2F" />
                   </button>
@@ -101,24 +95,20 @@ const Navbar = ({ Search, cart, removeFromCart }) => {
               <p className="empty-cart">Your cart is empty.</p>
             )}
           </div>
-          {cart.length > 0 && (
-            <>
-              <div className="shopping-totale">
-                <h3>Subtotal :</h3>
-                <p>
-                  {cart
-                    .reduce((acc, item) => acc + Number(item.price), 0)
-                    .toFixed(2)}{" "}
-                  dh
-                </p>
-              </div>
-              <hr></hr>
-              <div className="shopping-buttons">
-                <button onClick={NavigateTOCard}>Cart</button>
-                <button>Check-out</button>
-              </div>
-            </>
-          )}
+          <div className="shopping-totale">
+            <h1>Subtotal</h1>
+            <p>
+              {cart
+                .reduce((acc, item) => acc + Number(item.price*item.quantity), 0)
+                .toFixed(2)}{" "}
+              dh
+            </p>
+          </div>
+          <hr></hr>
+          <div className="shopping-buttons">
+            <button onClick={() => navigate("/cart")}>Cart</button>
+            <button onClick={()=>navigate('/check-out')}>Check-out</button>
+          </div>
         </div>
       )}
     </nav>

@@ -1,47 +1,55 @@
-import React, { useState } from 'react'
-import './style/Checkout.css';
+import React, { useState } from "react";
+import "./style/Checkout.css";
 import Navbar from "./navbar";
 import Footer from "./footer";
-import BfrFooter from './bfr_footer';
-import GR_checkout from '../images/GR_chechout.png'
-import { Link } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
+import BfrFooter from "./bfr_footer";
+import GR_checkout from "../images/GR_chechout.png";
+import { Link } from "react-router-dom";
+import { ChevronRight } from "lucide-react";
+import { useSelector, useDispatch } from "react-redux";
+import { removeFromCart } from "./cartSlice";
 
 function Checkout() {
-    const [selectedPayment, setSelectedPayment] = useState('');
+  const [selectedPayment, setSelectedPayment] = useState("");
+  const cartItems = useSelector((state) => state.cart); // Get cart items from store
+  const dispatch = useDispatch();
 
-    const handlePaymentChange = (method) => {
-      setSelectedPayment(method);
-    };
+  const handlePaymentChange = (method) => {
+    setSelectedPayment(method);
+  };
+
+  const total = cartItems.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
+
   return (
     <div>
       <Navbar />
-      <div class="checkout_bg">
-        <div class="center_checkout">
+      <div className="checkout_bg">
+        <div className="center_checkout">
           <img src={GR_checkout} alt={GR_checkout} />
         </div>
-          <nav>
-            <ul>
-              <li>
-                <Link to="/">Home</Link>
-              </li>
-              <span>
-                <ChevronRight />
-              </span>
-              <li>
-                <Link to="/check-out">Checkout</Link>
-              </li>
-            </ul>
-          </nav>
+        <nav>
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <span>
+              <ChevronRight />
+            </span>
+            <li>
+              <Link to="/check-out">Checkout</Link>
+            </li>
+          </ul>
+        </nav>
       </div>
       <div className="checkOut_container">
-        {/* billing-details-section */}
-
+        {/* Billing Details Section */}
         <div className="billing-details">
-          <h1>Billing Details :</h1>
-
+          <h1>Billing Details:</h1>
           <div className="name-section">
-            <div className="fist">
+            <div className="first">
               <label>First Name</label>
               <input type="text" />
             </div>
@@ -90,7 +98,7 @@ function Checkout() {
           </div>
         </div>
 
-        {/* payement-info-section */}
+        {/* Payment Info Section */}
         <div className="payement-info-section">
           {/* Product Section */}
           <div className="product-section">
@@ -100,38 +108,43 @@ function Checkout() {
                 <h2>Subtotal</h2>
               </div>
             </div>
-            <div className="row">
-              <div className="column">
-                <label>Asgaard sofa x 1</label>
-                <span>Rs. 250,000.00</span>
+            {cartItems.map((item) => (
+              <div key={item.id} className="row">
+                <div className="column">
+                  <label>
+                    {item.name} x {item.quantity}
+                  </label>
+                  <span>
+                    {(item.price * item.quantity).toLocaleString()} Dh
+                  </span>
+                </div>
               </div>
-            </div>
+            ))}
             <div className="row">
               <div className="column">
                 <label>Subtotal</label>
-                <span>Rs. 250,000.00</span>
+                <span>{total.toLocaleString()} Dh</span>
               </div>
             </div>
             <div className="row">
               <div className="column">
                 <label>Total</label>
-                <span>Rs. 250,000.00</span>
+                <span>{total.toLocaleString()} Dh</span>
               </div>
             </div>
           </div>
 
-          {/* Payment  Section */}
+          {/* Payment Section */}
           <div className="payment-section">
             {selectedPayment && (
               <div className="selected-payment">
-                <input type="radio" checked />
+                <input type="radio" checked readOnly />
                 <span>{selectedPayment}</span>
               </div>
             )}
             <p>
-              Make your payment directly into our bank account. Proven way your
-              code to fit the payment reference, that credit will not be shipped
-              in time due to the expected net account.
+              Make your payment directly into our bank account or pay cash on
+              delivery.
             </p>
             <label>
               <input
@@ -139,7 +152,7 @@ function Checkout() {
                 name="payment"
                 onChange={() => handlePaymentChange("Direct Bank Transfer")}
                 checked={selectedPayment === "Direct Bank Transfer"}
-              />{" "}
+              />
               Direct Bank Transfer
             </label>
             <label>
@@ -148,7 +161,7 @@ function Checkout() {
                 name="payment"
                 onChange={() => handlePaymentChange("Cash on Delivery")}
                 checked={selectedPayment === "Cash on Delivery"}
-              />{" "}
+              />
               Cash on Delivery
             </label>
 
@@ -156,7 +169,7 @@ function Checkout() {
               Your personal data will be used to support your experience
               throughout this website, to manage access to your account, and for
               other purposes described in our
-              <span> privacy policy. </span>{" "}
+              <span> privacy policy. </span>
             </p>
             <button className="place-order-button">Place Order</button>
           </div>
@@ -167,4 +180,5 @@ function Checkout() {
     </div>
   );
 }
-export default Checkout
+
+export default Checkout;

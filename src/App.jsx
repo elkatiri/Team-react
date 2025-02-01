@@ -11,7 +11,9 @@ import Home from "./components/home";
 import Shop from "./components/shope";
 import ProductDetails from "./components/productdetails";
 import Checkout from "./components/Checkout";
-import Card from "./components/card";
+import { Provider } from "react-redux";
+import store from "./components/store";
+import Cart from "./components/card";
 function App() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [user, setUser] = useState("");
@@ -21,29 +23,29 @@ function App() {
   }, []);
   return (
     <>
-      
-      <BrowserRouter>
-        <Routes>
-          <Route
-            path="/dashboard/orders"
-            element={isAdmin && <Orders user={user} />}
-          />
-          <Route
-            path="/dashboard/products"
-            element={isAdmin && <Products user={user} />}
-          />
-          <Route path="/"element={<Home/>}/>
-          <Route path="/shop"element={<Shop/>}/>
-          <Route path="/product-details/:id" element={<ProductDetails />} />
-          <Route path="/about" element={<Blog />} />
-          <Route path="/contact" element={<About />} />
-          <Route path="/check-out" element={<Checkout />} />
-          <Route path="/card" element={<Card />} />
-          <Route path="/auth" element={<AuthForm />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-      
+      <Provider store={store}>
+        <BrowserRouter>
+          <Routes>
+            <Route
+              path="/dashboard/orders"
+              element={isAdmin && <Orders user={user} />}
+            />
+            <Route
+              path="/dashboard/products"
+              element={isAdmin && <Products user={user} />}
+            />
+            <Route path="/" element={<Home />} />
+            <Route path="/shop" element={<Shop />} />
+            <Route path="/product-details/:id" element={<ProductDetails />} />
+            <Route path="/about" element={<Blog />} />
+            <Route path="/contact" element={<About />} />
+            <Route path="/check-out" element={<Checkout />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/auth" element={<AuthForm />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </Provider>
     </>
   );
 };

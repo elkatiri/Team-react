@@ -1,20 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { Star, Facebook, Linkedin, Twitter, ChevronRight } from 'lucide-react';
-import './style/productdetails.css';
-import Navbar from './navbar';
-import Footer from './footer';
-import { Link, useParams } from 'react-router-dom';
-import axios from 'axios';
-import Spinner from './spinner';
-
+import React, { useEffect, useState } from "react";
+import { Star, Facebook, Linkedin, Twitter, ChevronRight } from "lucide-react";
+import "./style/productdetails.css";
+import Navbar from "./navbar";
+import Footer from "./footer";
+import { Link, useParams } from "react-router-dom";
+import axios from "axios";
+import Spinner from "./spinner";
+import { useDispatch } from "react-redux";
+import { addToCart } from "./cartSlice"; // Import addToCart action
 
 const ProductDetails = () => {
   const { id } = useParams();
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState({});
   const [quantity, setQuantity] = useState(1);
-  const [selectedColor, setSelectedColor] = useState('purple');
-  const [activeTab, setActiveTab] = useState('description');
+  const [selectedColor, setSelectedColor] = useState("purple");
+  const [selectedSize, setSelectedSize] = useState("M"); // Added state for selected size
+  const [activeTab, setActiveTab] = useState("description");
 
   const colors = [
     { id: "purple", value: "#6B4CE6" },
@@ -26,20 +29,38 @@ const ProductDetails = () => {
     { id: "pink", value: "#FFC0CB" },
   ];
 
-  const sizes = ['S', 'M', 'L'];
-useEffect(() => {
-  const fetchProduct = async () => {
-    try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/products/${id}`);
-      setProduct(response.data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
+  const sizes = ["S", "M", "L"];
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await axios.get(
+          `http://127.0.0.1:8000/api/products/${id}`
+        );
+        setProduct(response.data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProduct();
+  }, [id]);
+
+  // Handle Add to Cart action
+  const handleAddToCart = () => {
+    const cartProduct = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      color: selectedColor,
+      size: selectedSize, 
+      quantity,
+    };
+
+    dispatch(addToCart(cartProduct)); // Dispatch the action to add the product to the cart
   };
-  fetchProduct();
-}, [id]);
 
   return (
     <div>
@@ -120,7 +141,13 @@ useEffect(() => {
                 <span className="label">Size:</span>
                 <div className="size-options">
                   {sizes.map((size) => (
-                    <button key={size} className="size-btn">
+                    <button
+                      key={size}
+                      className={`size-btn ${
+                        selectedSize === size ? "selected" : ""
+                      }`}
+                      onClick={() => setSelectedSize(size)} // Update the selected size
+                    >
                       {size}
                     </button>
                   ))}
@@ -142,8 +169,11 @@ useEffect(() => {
             </div>
 
             <div className="actions">
-              <button className="add-to-cart">Add To Cart</button>
+              <button className="add-to-cart" onClick={handleAddToCart}>
+                Add To Cart
+              </button>
             </div>
+
             <div className="social-share">
               <span>Share:</span>
               <div className="share-buttons">
@@ -189,33 +219,7 @@ useEffect(() => {
             <div className="tab-content">
               {activeTab === "description" && (
                 <div className="description-content">
-                  <p>
-                    Embodying the raw, wayward spirit of rock 'n' roll, the
-                    Killam parlor sofa chair speaks against these the
-                    standardizable look and sound of identical, package-tour
-                    bands and takes the show on the road.
-                  </p>
-                  <p>
-                    Weighing in under 7 pounds, the Killam is a lightweight
-                    piece of vintage styled engineering. Setting the bar as one
-                    of the loudest speakers in its class, the Killam is a
-                    compact, dual channel combo with headphone out & built-in
-                    reverb. Like a musician's favorite instrument, it becomes
-                    better with age and can be relied on to perform after years
-                    of heavy use. Personalize your sound to your personal
-                    preferences via the pre-gain influenced leather strap
-                    enables easy and stylish travel.
-                  </p>
-                  <div className="product-images">
-                    <img
-                      src={`http://localhost:8000/storage/${product.image}`}
-                      alt={product.name}
-                    />
-                    <img
-                      src={`http://localhost:8000/storage/${product.image}`}
-                      alt={product.name}
-                    />
-                  </div>
+                  <p>{product.description}</p>
                 </div>
               )}
               {activeTab === "additional" && (

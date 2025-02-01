@@ -6,12 +6,15 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Spinner from "./spinner";
+import { useSelector, useDispatch } from "react-redux";
+import { addToCart, removeFromCart } from "./cartSlice";
 
 export default function Home() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart);
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState([]); 
 
   const fetchedProducts = async () => {
     setLoading(true);
@@ -19,8 +22,7 @@ export default function Home() {
       const response = await axios.get(
         "http://127.0.0.1:8000/api/limitedProducts"
       );
-      const data = response.data;
-      setProducts(data);
+      setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {
@@ -43,14 +45,13 @@ export default function Home() {
     }
   }
 
-  // Add product to cart
   function handelAddToCart(product) {
-    setCart((prevCart) => [...prevCart, product]);
+    dispatch(addToCart({...product,quantity:1})); // Dispatch action to add to Redux store
   }
-  //remove product from cart
-  const removeFromCart = (index) => {
-      setCart((prevCart) => prevCart.filter((_, i) => i !== index));
-    }; 
+
+  function handelRemoveFromCart(index) {
+    dispatch(removeFromCart(index)); // Dispatch action to remove from Redux store
+  }
 
   useEffect(() => {
     fetchedProducts();
@@ -58,7 +59,11 @@ export default function Home() {
 
   return (
     <>
-      <Navbar Search={Search} cart={cart} removeFromCart={removeFromCart} />
+      <Navbar
+        Search={Search}
+        cart={cart}
+        removeFromCart={handelRemoveFromCart}
+      />
       <Header />
       {loading ? (
         <Spinner />

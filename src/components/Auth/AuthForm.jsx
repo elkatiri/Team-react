@@ -48,7 +48,7 @@ const AuthForm = () => {
           navigate("/dashboard/orders");
         }
         else {
-          navigate("/home");
+          navigate("/");
         }
         localStorage.setItem("token", resp.data.token);
         localStorage.setItem("user", resp.data.user.name);

@@ -14,6 +14,7 @@ import Checkout from "./components/Checkout";
 import { Provider } from "react-redux";
 import store from "./components/store";
 import Cart from "./components/card";
+import Messages from "./components/dashboard/messages";
 function App() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [user, setUser] = useState("");
@@ -33,6 +34,10 @@ function App() {
             <Route
               path="/dashboard/products"
               element={isAdmin && <Products user={user} />}
+            />
+            <Route
+              path="/dashboard/messages"
+              element={isAdmin && <Messages user={user} />}
             />
             <Route path="/" element={<Home />} />
             <Route path="/shop" element={<Shop />} />

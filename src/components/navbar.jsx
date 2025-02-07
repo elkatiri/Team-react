@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { FaCartPlus, FaSearch, FaUser } from "react-icons/fa";
 import { useNavigate, NavLink } from "react-router-dom";
-import { ShoppingBag, Trash } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
+import { ShoppingBag, Trash } from "lucide-react";
 import { removeFromCart } from "./cartSlice";
+import { logout } from "./authSlice";
 import "./style/navbar.css";
 import logo from "../images/logo.png";
 
@@ -14,11 +15,12 @@ const Navbar = ({ Search }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
+  const userName = useSelector((state) => state.auth.userName);
 
   const toggleSearch = () => setIsSearchVisible(!isSearchVisible);
   const toggleCart = () => setIsCartVisible(!isCartVisible);
 
-  function handelSearch(e) {
+  function handleSearch(e) {
     setSearchQuery(e.target.value);
     Search(e.target.value);
   }
@@ -31,7 +33,7 @@ const Navbar = ({ Search }) => {
       </div>
       <ul className="menu">
         <li>
-          <NavLink to="/" end>
+          <NavLink to="/home" end>
             Home
           </NavLink>
         </li>
@@ -46,9 +48,20 @@ const Navbar = ({ Search }) => {
         </li>
       </ul>
       <div className="icons">
-        <NavLink to="/auth">
-          <FaUser className="icon" />
-        </NavLink>
+        <div className="user-container">
+          {userName ? (
+            <span className="user-name">{userName}</span>
+          ) : (
+            <NavLink to="/auth">
+              <FaUser className="icon" />
+            </NavLink>
+          )}
+          {userName && (
+            <button className="logout-btn" onClick={() => dispatch(logout())}>
+              Logout
+            </button>
+          )}
+        </div>
         <div className="search-container">
           <FaSearch className="icon" onClick={toggleSearch} />
           {isSearchVisible && (
@@ -57,7 +70,7 @@ const Navbar = ({ Search }) => {
               className="search-input"
               placeholder="Search for products..."
               value={searchQuery}
-              onChange={handelSearch}
+              onChange={handleSearch}
             />
           )}
         </div>
@@ -82,7 +95,7 @@ const Navbar = ({ Search }) => {
                   />
                   <p>{item.name}</p>
                   <p>{item.quantity}</p>
-                  <p>{item.price*item.quantity} dh</p>
+                  <p>{item.price * item.quantity} dh</p>
                   <button
                     className="remove-btn"
                     onClick={() => dispatch(removeFromCart(item.id))}
@@ -99,15 +112,18 @@ const Navbar = ({ Search }) => {
             <h1>Subtotal</h1>
             <p>
               {cart
-                .reduce((acc, item) => acc + Number(item.price*item.quantity), 0)
+                .reduce(
+                  (acc, item) => acc + Number(item.price * item.quantity),
+                  0
+                )
                 .toFixed(2)}{" "}
               dh
             </p>
           </div>
-          <hr></hr>
+          <hr />
           <div className="shopping-buttons">
             <button onClick={() => navigate("/cart")}>Cart</button>
-            <button onClick={()=>navigate('/check-out')}>Check-out</button>
+            <button onClick={() => navigate("/check-out")}>Check-out</button>
           </div>
         </div>
       )}

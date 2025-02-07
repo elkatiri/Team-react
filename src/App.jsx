@@ -16,10 +16,10 @@ import store from "./components/store";
 import Cart from "./components/card";
 function App() {
   const [isAdmin, setIsAdmin] = useState(false);
-  const [user, setUser] = useState("");
+  const [userName, setUser] = useState("");
   useEffect(() => {
     setIsAdmin(localStorage.getItem("admin"));
-    setUser(localStorage.getItem("user"));
+    setUser(localStorage.getItem("userName"));
   }, []);
   return (
     <>
@@ -28,13 +28,13 @@ function App() {
           <Routes>
             <Route
               path="/dashboard/orders"
-              element={isAdmin && <Orders user={user} />}
+              element={isAdmin && <Orders userName={userName} />}
             />
             <Route
               path="/dashboard/products"
-              element={isAdmin && <Products user={user} />}
+              element={isAdmin && <Products userName={userName} />}
             />
-            <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/product-details/:id" element={<ProductDetails />} />
             <Route path="/about" element={<Blog />} />

@@ -15,9 +15,9 @@ export default function SideBar() {
   axios.post("http://127.0.0.1:8000/api/logout", { headers: { Authorization: `Bearer ${token}` } });
     localStorage.removeItem("token");
     localStorage.setItem("admin",false);
-    localStorage.removeItem("user");
+    localStorage.removeItem("userName");
 
-    window.location.href = "/";
+    window.location.href = "/home";
   }
   return (
     <div className="sideBar">

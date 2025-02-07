@@ -18,7 +18,7 @@ const Footer = () => {
           <h4 className="section-title">Links</h4>
           <ul className="list">
             <li className="list-item">
-              <NavLink to="/" className="link" end>
+              <NavLink to="/homw" className="link" end>
                 Home
               </NavLink>
             </li>

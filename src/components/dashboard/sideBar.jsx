@@ -10,6 +10,7 @@ import { CheckCircle, LogOut, MessageSquareMore, ShoppingCart, Store } from "luc
 import { useEffect, useState } from "react";
 
 export default function SideBar() {
+<<<<<<< HEAD
   const [newMessagesCount, setNewMessagesCount] = useState(0);
   const location = useLocation();
 
@@ -51,6 +52,16 @@ export default function SideBar() {
     localStorage.setItem("admin", false);
     localStorage.removeItem("user");
     window.location.href = "/";
+=======
+  function logout() { 
+  const token = localStorage.getItem("token");
+  axios.post("http://127.0.0.1:8000/api/logout", { headers: { Authorization: `Bearer ${token}` } });
+    localStorage.removeItem("token");
+    localStorage.setItem("admin",false);
+    localStorage.removeItem("userName");
+
+    window.location.href = "/home";
+>>>>>>> main
   }
 
   return (

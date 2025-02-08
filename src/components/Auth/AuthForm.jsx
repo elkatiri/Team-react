@@ -4,11 +4,12 @@ import "./AuthForm.css";
 import { useNavigate } from "react-router-dom";
 import Footer from "../footer";
 import Navbar from "../navbar";
-
+import Spinner from "../spinner"; 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [border, setBorder] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); 
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -32,48 +33,53 @@ const AuthForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Set loading to true when form is submitted
 
     if (isLogin) {
-      setBorder(false); // Reset border for login
-      setError(""); // Reset error message for login
-      // API call for login
+      setBorder(false);
+      setError("");
       try {
-        const resp=await axios.post("http://127.0.0.1:8000/api/login", {
+        const resp = await axios.post("http://127.0.0.1:8000/api/login", {
           email: formData.email,
           password: formData.password,
         });
-        // Handle successful login
-        if (resp.data.user.is_admin) { 
+        if (resp.data.user.is_admin) {
           localStorage.setItem("admin", true);
+<<<<<<< HEAD
           navigate("/dashboard/orders");
         }
         else {
           navigate("/");
+=======
+          navigate("/dashboard/products");
+        } else {
+          navigate("/home");
+>>>>>>> main
         }
         localStorage.setItem("token", resp.data.token);
-        localStorage.setItem("user", resp.data.user.name);
-      } catch (error){
+        localStorage.setItem("userName", resp.data.user.name);
+        localStorage.setItem("email", resp.data.user.email);
+      } catch (error) {
         console.error("Login failed:", error);
         setBorder(true);
       }
     } else {
-      // Validate passwords for registration
       if (formData.password !== formData.password_confirmation) {
         setBorder(true);
+        setLoading(false); // Reset loading state if validation fails
         return;
       }
 
-      // API call for registration
       try {
         await axios.post("http://127.0.0.1:8000/api/register", formData);
-        setIsLogin(true); 
-        setBorder(false); 
-        setError(""); 
+        setIsLogin(true);
+        setBorder(false);
+        setError("");
       } catch (error) {
         setError(error.response.data.message);
-
       }
     }
+    setLoading(false); // Reset loading state after API call
   };
 
   return (
@@ -84,6 +90,7 @@ const AuthForm = () => {
           className={`auth-form ${isLogin ? "fade-in-bottom" : "fade-in-top"}`}
         >
           <h2 className="form-title">{isLogin ? "Sign In" : "Sign Up"}</h2>
+          {loading && <Spinner />}
           <form onSubmit={handleSubmit}>
             {!isLogin && (
               <div className="form-group">
@@ -99,7 +106,6 @@ const AuthForm = () => {
                 />
               </div>
             )}
-
             <div className="form-group">
               <label htmlFor="email">Email Address</label>
               <input
@@ -113,7 +119,6 @@ const AuthForm = () => {
               />
               {error && <p className="error-text">{error}</p>}
             </div>
-
             <div className="form-group">
               <label htmlFor="password">Password</label>
               <input

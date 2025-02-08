@@ -6,7 +6,7 @@ import "./products.css";
 import ProductSidebar from "./sideBarProduct";
 import SideBar from "./sideBar";
 
-export default function Products({ user }) {
+export default function Products({ userName }) {
   const [products, setProducts] = useState([]);
   const [token, setToken] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -83,7 +83,6 @@ export default function Products({ user }) {
   const handleSaveProduct = async (productData) => {
     //debuging the product data
 
-
     try {
       if (!token) {
         throw new Error("Token not available");
@@ -92,9 +91,9 @@ export default function Products({ user }) {
       // If currentProduct is set, we are updating a product
       if (currentProduct) {
         //Debeguing
-          productData.forEach((value, key) => {
-            console.log(`${key}: ${value}`);
-          });
+        productData.forEach((value, key) => {
+          console.log(`${key}: ${value}`);
+        });
 
         const response = await axios.put(
           `http://127.0.0.1:8000/api/products/${currentProduct.id}`,
@@ -143,7 +142,7 @@ export default function Products({ user }) {
         <div>
           <div className="welcome">
             <h1>
-              Welcome <span>{user}</span>👋
+              Welcome <span>{userName}</span>👋
             </h1>
             <img src={image1} alt="admin" />
           </div>

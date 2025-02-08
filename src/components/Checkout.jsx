@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios"; // Import axios
 import "./style/Checkout.css";
 import Navbar from "./navbar";
 import Footer from "./footer";
@@ -7,12 +8,30 @@ import GR_checkout from "../images/GR_chechout.png";
 import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
-import { removeFromCart } from "./cartSlice";
+import Spinner from "./spinner";
+import OrderSuccess from "./ordersuccess";
+import { clearCart } from "./cartSlice";
 
 function Checkout() {
   const [selectedPayment, setSelectedPayment] = useState("");
-  const cartItems = useSelector((state) => state.cart); // Get cart items from store
+  const [loading, setLoading] = useState(false);
+  const [orderPlaced, setOrderPlaced] = useState(false);
+  const [billingDetails, setBillingDetails] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+  });
+  const cartItems = useSelector((state) => state.cart);
   const dispatch = useDispatch();
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setBillingDetails((prevDetails) => ({
+      ...prevDetails,
+      [name]: value,
+    }));
+  };
 
   const handlePaymentChange = (method) => {
     setSelectedPayment(method);
@@ -22,6 +41,74 @@ function Checkout() {
     (acc, item) => acc + item.price * item.quantity,
     0
   );
+
+  const placeOrder = async () => {
+    if (cartItems.length === 0) {
+      alert(
+        "Your cart is empty. Please add items to the cart before proceeding."
+      );
+      return;
+    }
+    if (
+      !billingDetails.firstName ||
+      !billingDetails.lastName ||
+      !billingDetails.email ||
+      !billingDetails.phone
+    ) {
+      alert(
+        "Please fill in all required fields: First Name, Last Name, Email, and Phone."
+      );
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // Concatenate first and last name into a single "name" field
+      const fullName = `${billingDetails.firstName} ${billingDetails.lastName}`;
+
+      // Create customer with full name, email, and phone
+      const customerResponse = await axios.post(
+        "http://localhost:8000/api/customers",
+        {
+          name: fullName, // Send concatenated name
+          email: billingDetails.email,
+          phone: billingDetails.phone,
+        }
+      );
+
+      if (!customerResponse.data.id)
+        throw new Error("Customer creation failed");
+
+      const customerId = customerResponse.data.id;
+
+      // Place the order for the newly created customer
+      const orderResponse = await axios.post(
+        "http://localhost:8000/api/orders",
+        {
+          customer_id: customerId,
+          order_date: new Date().toISOString().split("T")[0],
+          delivery_status: "pending",
+          products: cartItems.map((item) => ({
+            id: item.id,
+            quantity: item.quantity,
+          })),
+        }
+      );
+
+      if (!orderResponse.data) throw new Error("Order placement failed");
+
+      dispatch(clearCart());
+      setOrderPlaced(true);
+      setTimeout(() => {
+        setOrderPlaced(false);
+      }, 5000);
+    } catch (error) {
+      alert("Error: " + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div>
@@ -44,63 +131,52 @@ function Checkout() {
           </ul>
         </nav>
       </div>
+      {loading && <Spinner />}
+      {orderPlaced && <OrderSuccess />}
       <div className="checkOut_container">
-        {/* Billing Details Section */}
         <div className="billing-details">
           <h1>Billing Details:</h1>
           <div className="name-section">
             <div className="first">
               <label>First Name</label>
-              <input type="text" />
+              <input
+                type="text"
+                name="firstName"
+                value={billingDetails.firstName}
+                onChange={handleInputChange}
+              />
             </div>
             <div className="last">
               <label>Last Name</label>
-              <input type="text" />
+              <input
+                type="text"
+                name="lastName"
+                value={billingDetails.lastName}
+                onChange={handleInputChange}
+              />
             </div>
-          </div>
-          <div className="company-section">
-            <label>Company Name (Optional)</label>
-            <input type="text" />
-          </div>
-          <div className="country-section">
-            <label>Country / Region</label>
-            <select>
-              <option value="Agadir">Agadir</option>
-              <option value="Marrakech">Marrakech</option>
-              <option value="Rabat">Rabat</option>
-              <option value="Casablanca">Casablanca</option>
-              <option value="Fes">Fes</option>
-            </select>
-          </div>
-          <div className="address-section">
-            <label>Street Address</label>
-            <input type="text" />
-          </div>
-          <div className="city-section">
-            <label>Town / City</label>
-            <input type="text" />
-          </div>
-          <div className="code-section">
-            <label>Zip Code</label>
-            <input type="text" />
-          </div>
-          <div className="phone-section">
-            <label>Phone</label>
-            <input type="text" />
           </div>
           <div className="email-section">
             <label>Email Address</label>
-            <input type="email" />
+            <input
+              type="email"
+              name="email"
+              value={billingDetails.email}
+              onChange={handleInputChange}
+            />
           </div>
-
-          <div className="addional-info-section">
-            <textarea rows={4} placeholder="Additional information"></textarea>
+          <div className="phone-section">
+            <label>Phone</label>
+            <input
+              type="text"
+              name="phone"
+              value={billingDetails.phone}
+              onChange={handleInputChange}
+            />
           </div>
         </div>
 
-        {/* Payment Info Section */}
         <div className="payement-info-section">
-          {/* Product Section */}
           <div className="product-section">
             <div className="row">
               <div className="column">
@@ -134,7 +210,6 @@ function Checkout() {
             </div>
           </div>
 
-          {/* Payment Section */}
           <div className="payment-section">
             {selectedPayment && (
               <div className="selected-payment">
@@ -164,21 +239,26 @@ function Checkout() {
               />
               Cash on Delivery
             </label>
-
             <p className="privacy-notice">
               Your personal data will be used to support your experience
               throughout this website, to manage access to your account, and for
               other purposes described in our
               <span> privacy policy. </span>
             </p>
-            <button className="place-order-button">Place Order</button>
+            <button
+              className="place-order-button"
+              onClick={placeOrder}
+              disabled={loading || !selectedPayment}
+            >
+              Place Order
+            </button>
           </div>
         </div>
       </div>
+
       <BfrFooter />
       <Footer />
     </div>
   );
 }
-
 export default Checkout;

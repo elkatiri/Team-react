@@ -45,9 +45,16 @@ const AuthForm = () => {
         });
         if (resp.data.user.is_admin) {
           localStorage.setItem("admin", true);
+<<<<<<< HEAD
+          navigate("/dashboard/orders");
+        }
+        else {
+          navigate("/");
+=======
           navigate("/dashboard/products");
         } else {
           navigate("/home");
+>>>>>>> main
         }
         localStorage.setItem("token", resp.data.token);
         localStorage.setItem("userName", resp.data.user.name);
